@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "HPLTagCloudGenerator.h"
 
+#define OLD_STYLE 0
+
 @interface ViewController ()
 @property (nonatomic) UIButton *refreshButton;
 @property (nonatomic) UIView *tagView;
@@ -50,8 +52,20 @@
   tagGenerator.size = CGSizeMake(self.tagView.frame.size.width, self.tagView.frame.size.height);
   tagGenerator.tagDict = tagDict;
   
+#if OLD_STYLE
+  NSArray *views = [tagGenerator generateTagViews];
+  
+  for (UIView *view in _tagView.subviews) {
+    [view removeFromSuperview];
+  }
+
+  for (UIView *view in views) {
+    [_tagView addSubview:view];
+  }
+#else
   NSDictionary *tags = [tagGenerator generateTags];
   _tagLabelViews = [tagGenerator updateViews:_tagLabelViews inView:self.tagView withTags:tags animate:YES];
+#endif
 }
 
 @end
